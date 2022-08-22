@@ -12,16 +12,20 @@ const int WINDOW_WIDTH = 400;
 // Vertex Shader source code
 const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
+"uniform float size;\n"
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+
+"   gl_Position = vec4(size*aPos.x, size*aPos.y, size*aPos.z, 1.0);\n"
 "}\0";
 //Fragment Shader source code
 const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
+"uniform vec4 color;\n"
 "void main()\n"
 "{\n"
-"   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
+
+"   FragColor = color;\n"
 "}\n\0";
 
 
@@ -55,7 +59,6 @@ int main()
 
 	//Specify window viewport for OpenGL to render custom color
 	glViewport(0,0,WINDOW_HEIGHT,WINDOW_WIDTH);
-
 
 	//Vertex Shader - Step 1 of Grpahics Pipeline
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -125,7 +128,13 @@ int main()
 
 	// Variables to be changed in the ImGUI window
 	bool drawTriangle = true;
+	float size = 1.0f;
+	float color[4] = {0.5f, 0.6f, 1.0f, 0.3f};
 
+	//Exporting variables to shaders
+	glUseProgram(shaderProgram);
+	glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
+	glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
 
 
 	//swap back and front buffers to display the front buffer color
@@ -135,7 +144,7 @@ int main()
 	while(!glfwWindowShouldClose(window))
 	{
 		//Set the color for the front buffer
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		glClearColor(0.7f, 0.8f, 0.1f, 1.0f);
 
 		//Clear the back buffer
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -157,7 +166,14 @@ int main()
 		ImGui::Begin("GuiAppExample");
 		ImGui::Text("Hello from the GuiAppExample!");
 		ImGui::Checkbox("Draw Triangle", &drawTriangle);
+		ImGui::SliderFloat("Size", &size, 0.5f, 2.0f);
+		ImGui::ColorEdit4("Color Picker", color);
 		ImGui::End();
+
+		// Export variables to shader
+		glUseProgram(shaderProgram);
+		glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
+		glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
 
 		//Stage Frame to be rendered
 		ImGui::Render();
