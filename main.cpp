@@ -2,6 +2,7 @@
 #include "libraries/includes/GLFW/glfw3.h"
 #include <iostream>
 #include <math.h>
+#include "imgui/imgui_stdlib.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -131,6 +132,11 @@ int main()
 	float size = 1.0f;
 	float color[4] = {0.5f, 0.6f, 1.0f, 0.3f};
 
+	//Variables for the windows
+	bool isShowWindow=true;
+	std::string string_buf;
+
+
 	//Exporting variables to shaders
 	glUseProgram(shaderProgram);
 	glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
@@ -163,17 +169,35 @@ int main()
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		//Set Header title and text object using ImGui
-		ImGui::Begin("GuiAppExample");
-		ImGui::Text("Hello from the GuiAppExample!");
-		ImGui::Checkbox("Draw Triangle", &drawTriangle);
-		ImGui::SliderFloat("Size", &size, 0.5f, 2.0f);
-		ImGui::ColorEdit4("Color Picker", color);
-		ImGui::End();
+		if(!isShowWindow)
+		{
+			ImGui::Begin("GuiAppExample");
+			ImGui::Text("Here is the text that you saved.");
+			ImGui::Text(string_buf.c_str());
+			if(ImGui::Button("Edit Saved Text"))
+				isShowWindow=!isShowWindow;
+//			ImGui::Checkbox("Draw Triangle", &drawTriangle);
+//			ImGui::SliderFloat("Size", &size, 0.5f, 2.0f);
+//			ImGui::ColorEdit4("Color Picker", color);
+			ImGui::End();
+		}
+
+		if(isShowWindow)
+		{
+			ImGui::Begin("Window B");
+			ImGui::Text("Enter Some Text. Then hit save.");
+			ImGui::ImGuiCore::InputText("Text", &string_buf);
+			if(ImGui::Button("Save"))
+				isShowWindow = !isShowWindow;
+
+			ImGui::End();
+		}
 
 		// Export variables to shader
 		glUseProgram(shaderProgram);
 		glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
 		glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
+
 
 		//Stage Frame to be rendered
 		ImGui::Render();

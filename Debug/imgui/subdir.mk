@@ -9,6 +9,7 @@ CPP_SRCS += \
 ../imgui/imgui_draw.cpp \
 ../imgui/imgui_impl_glfw.cpp \
 ../imgui/imgui_impl_opengl3.cpp \
+../imgui/imgui_stdlib.cpp \
 ../imgui/imgui_tables.cpp \
 ../imgui/imgui_widgets.cpp 
 
@@ -18,6 +19,7 @@ OBJS += \
 ./imgui/imgui_draw.o \
 ./imgui/imgui_impl_glfw.o \
 ./imgui/imgui_impl_opengl3.o \
+./imgui/imgui_stdlib.o \
 ./imgui/imgui_tables.o \
 ./imgui/imgui_widgets.o 
 
@@ -27,6 +29,7 @@ CPP_DEPS += \
 ./imgui/imgui_draw.d \
 ./imgui/imgui_impl_glfw.d \
 ./imgui/imgui_impl_opengl3.d \
+./imgui/imgui_stdlib.d \
 ./imgui/imgui_tables.d \
 ./imgui/imgui_widgets.d 
 
